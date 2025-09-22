@@ -17,6 +17,7 @@ async function fetch_page_and_write_to_csv(url)
     }
     })
     .then((res) => res.json())
+    .catch((error) => console.error(error))
 
     /* get payments for current page */
     const payments = page.data;
