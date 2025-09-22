@@ -2,6 +2,7 @@ import { appendFileSync } from "fs";
 
 const TEBEX_SECRET = ''; /* <-- put your tebex secret here (https://docs.tebex.io/plugin/authentication) */
 const FILE_NAME = './tebex-customer-emails.csv'
+const INCLUDE_USERNAME = true; /* if you want to have username-email pairs or just the emails */
 
 // https://docs.tebex.io/plugin/endpoints/payments#get-all-payments-paginated
 const tebex_endpoint = 'https://plugin.tebex.io/payments?paged=1';
@@ -31,8 +32,16 @@ async function fetch_page_and_write_to_csv(url)
             /* add emails to already occured ones so remove duplicate emails if customer bought more than once */
             occured_emails.add(payment.email)
 
+            let csv_entry;
+            if (INCLUDE_USERNAME)
+            {
+                csv_entry = payment.player.name+","+payment.email+"\n"
+            } else {
+                csv_entry = payment.email+"\n";
+            }
+
             /* write customer name and email to csv */
-            appendFileSync(FILE_NAME, payment.player.name+","+payment.email+"\n", 'utf8')
+            appendFileSync(FILE_NAME, csv_entry, 'utf8')
         }
     });
 
